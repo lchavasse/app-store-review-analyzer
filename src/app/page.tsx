@@ -1,5 +1,4 @@
 import ReviewAnalyzer from '@/components/ReviewAnalyzer';
-import TestAppStore from '../pages/test-app-store';
 
 export default function Home() {
   return (
