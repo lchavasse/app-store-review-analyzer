@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Anthropic from '@anthropic-ai/sdk';
-import OpenAI from 'openai';
+import { Review } from '@/types/Review';
 
 const defaultApiKey = process.env.ANTHROPIC_API_KEY;
 
@@ -38,13 +38,18 @@ Based on these reviews, please answer the following question:`;
 
     console.log('Received response from Anthropic API'); // Debugging line
 
-    res.status(200).json({ response: response.content[0].text });
+    const responseText = response.content[0].type === 'text' 
+      ? response.content[0].text 
+      : 'No text response available';
+    res.status(200).json({ response: responseText });
   } catch (error) {
     console.error('Error communicating with Claude AI:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
     res.status(500).json({ 
       message: 'Error processing your request', 
-      error: error.message,
-      stack: error.stack // Include stack trace for debugging
+      error: errorMessage,
+      stack: errorStack
     });
   }
 }

@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.write(`data: ${safeJson}\n\n`);
         } catch (pageError) {
           console.error(`Error fetching page ${page}:`, pageError);
-          res.write(`data: ${JSON.stringify({ error: `Failed to fetch page ${page}: ${pageError.message}` })}\n\n`);
+          res.write(`data: ${JSON.stringify({ error: `Failed to fetch page ${page}: ${(pageError as Error).message}` })}\n\n`);
           break;
         }
       }
@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.write(`data: ${safeJson}\n\n`);
     } catch (error) {
       console.error('Error scraping App Store reviews:', error);
-      res.write(`data: ${JSON.stringify({ error: `Failed to scrape reviews: ${error.message}` })}\n\n`);
+      res.write(`data: ${JSON.stringify({ error: `Failed to scrape reviews: ${(error as Error).message}` })}\n\n`);
     } finally {
       if (!res.writableEnded) {
         console.log('Ending response...');

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import OpenAI from 'openai';
+import { Review } from '@/types/Review';
 
 const defaultApiKey = process.env.OPENAI_API_KEY;
 
