@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
-import { StarIcon, SendIcon, ArrowRightIcon, FilterIcon, Settings } from "lucide-react"
+import { StarIcon, SendIcon, ArrowRightIcon, FilterIcon, Settings, HomeIcon } from "lucide-react"
 import { motion } from "framer-motion"
 import StoreScraper from './StoreScraper'
 import ReviewCard from './reviewCard'
@@ -97,6 +97,26 @@ export default function ReviewAnalyzer() {
     visible: { opacity: 1, y: 0 }
   }
 
+  const resetToHome = () => {
+    setStep(1)
+    setAppStoreId('')
+    setPlayStoreId('')
+    setChatMessages([])
+    setUserMessage('')
+    setReviews([])
+    setIsScrapingComplete(false)
+    setSelectedReview(null)
+    setAppStoreReviews([])
+    setPlayStoreReviews([])
+    setKeywordFilter('')
+    setAppFilteredReviews([])
+    setPlayFilteredReviews([])
+    setFilteredReviews([])
+    setIsAppStoreScraped(false)
+    setIsPlayStoreScraped(false)
+    // Note: We're not resetting llmSettings to preserve user preferences
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center p-4 relative">
       <motion.div 
@@ -106,8 +126,16 @@ export default function ReviewAnalyzer() {
         variants={fadeIn}
       >
         <Card className="w-full overflow-hidden shadow-xl bg-stone-50">
-          <CardHeader className="bg-gradient-to-r from-stone-700 to-stone-800 text-stone-100">
-            <CardTitle className="text-3xl font-bold text-center">App Review Analyzer</CardTitle>
+          <CardHeader className="bg-gradient-to-r from-stone-700 to-stone-800 text-stone-100 flex flex-row items-center">
+            {step !== 1 && (
+              <Button
+                onClick={resetToHome}
+                className="bg-stone-600 hover:bg-stone-500 text-stone-100 rounded-xl"
+              >
+                <HomeIcon className="w-5 h-5" />
+              </Button>
+            )}
+            <CardTitle className="text-3xl font-bold text-center flex-grow mt-0">App Review Analyzer</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             {step === 1 && (
@@ -212,7 +240,7 @@ export default function ReviewAnalyzer() {
             <Settings className="h-6 w-6" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80">
+        <PopoverContent className="w-80 mr-10 mb-2">
           <SettingsComponent settings={llmSettings} onSettingsChange={setLLMSettings} />
         </PopoverContent>
       </Popover>

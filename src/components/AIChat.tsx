@@ -5,6 +5,7 @@ import { SendIcon } from "lucide-react"
 import { LLMSettings } from '@/types/LLMSettings'
 import { Review } from '@/types/Review'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import ReactMarkdown from 'react-markdown'
 
 interface ChatMessage {
   text: string;
@@ -17,10 +18,16 @@ interface AIChatProps {
 }
 
 export default function AIChat({ reviews, llmSettings }: AIChatProps) {
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([{ text: "Ask me anything about the reviews!", isUser: false }])
   const [userMessage, setUserMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
   const sendMessage = async () => {
     if (!userMessage.trim()) return
 
@@ -63,14 +70,18 @@ export default function AIChat({ reviews, llmSettings }: AIChatProps) {
   return (
     <Card className="bg-stone-200">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold text-stone-800">AI Analysis Chat</CardTitle>
+        <CardTitle className="text-xl font-semibold text-stone-800">AI Analysis</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="max-h-100 overflow-y-auto bg-stone-100 p-4 rounded-md shadow-inner">
           {chatMessages.map((msg, index) => (
             <div key={index} className={`mb-2 ${msg.isUser ? 'text-right' : 'text-left'}`}>
-              <span className={`inline-block p-2 rounded-lg ${msg.isUser ? 'bg-stone-600 text-stone-100' : 'bg-stone-300 text-stone-800'}`}>
-                {msg.text}
+              <span className={`inline-block p-2 rounded-lg ${msg.isUser ? 'bg-stone-600 text-stone-100 pr-4' : 'bg-stone-300 text-stone-800 pl-4'}`}>
+                {msg.isUser ? (
+                  msg.text
+                ) : (
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                )}
               </span>
             </div>
           ))}
@@ -80,6 +91,7 @@ export default function AIChat({ reviews, llmSettings }: AIChatProps) {
             placeholder="Ask about the reviews..."
             value={userMessage}
             onChange={(e) => setUserMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="flex-grow bg-stone-100 border-stone-300"
           />
           <Button onClick={sendMessage} className="self-end bg-stone-600 hover:bg-stone-700 text-stone-100">

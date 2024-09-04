@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const context = `You are an AI assistant analyzing app reviews. Here are the reviews:
 ${reviews.map((review: Review) => `- ${review.text} (Rating: ${review.rating}, Store: ${review.store})`).join('\n')}
 
-Based on these reviews, please answer the following question:`;
+Based on these reviews, please answer the following question: (please format your response as markdown using headings and paragraphs)`;
 
     console.log('Sending request to Anthropic API...'); // Debugging line
 
