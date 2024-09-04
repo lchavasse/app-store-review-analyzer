@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { StarIcon, SendIcon, ArrowRightIcon, FilterIcon, Settings } from "lucide-react"
 import { motion } from "framer-motion"
-// import AppStoreScraper from './AppStoreScraper'
 import StoreScraper from './StoreScraper'
 import ReviewCard from './reviewCard'
 import AIChat from './AIChat'

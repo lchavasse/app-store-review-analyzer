@@ -28,13 +28,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           appId,
           sort: gplay.sort.NEWEST,
           paginate: true,
-          nextPaginationToken,
-        });
+          nextPaginationToken: nextPaginationToken,
+        }) as any; // Add 'as any' here
 
-        const newReviews = result.data.map(review => ({
+        nextPaginationToken = result.nextPaginationToken;
+
+        const newReviews = result.data.map((review: any) => ({
           id: review.id,
           text: sanitizeString(review.text),
-          rating: review.score,
+          rating: review.score, 
           date: review.date,
         }));
 
@@ -43,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const safeJson = JSON.stringify({ progress: allReviews.length, newReviews }).replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
         res.write(`data: ${safeJson}\n\n`);
 
-        nextPaginationToken = result.nextPaginationToken;
+        
       } while (nextPaginationToken);
 
       const safeJson = JSON.stringify({ complete: true, totalReviews: allReviews.length }).replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
